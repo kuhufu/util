@@ -27,9 +27,9 @@ func AesEncrypt(origData, key []byte) ([]byte, error) {
 	blockSize := block.BlockSize()
 	origData = PKCS5Padding(origData, blockSize)
 	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
-	crypted := make([]byte, len(origData))
-	blockMode.CryptBlocks(crypted, origData)
-	return crypted, nil
+	crypto := make([]byte, len(origData))
+	blockMode.CryptBlocks(crypto, origData)
+	return crypto, nil
 }
 
 func AesDecrypt(crypted, key []byte) ([]byte, error) {
