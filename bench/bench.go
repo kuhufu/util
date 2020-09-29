@@ -10,7 +10,6 @@ import (
 )
 
 type bench struct {
-	countTime  bool   //记录任务时间
 	beforeTask func() //任务之前执行
 	afterTask  func() //任务之后执行
 
@@ -22,17 +21,29 @@ type bench struct {
 }
 
 type benchResult struct {
-	owner      *bench
-	CountTimes []time.Duration
-	Total      time.Duration
+	CountTimes  []time.Duration
+	TotalTime   time.Duration
+	TotalTask   int
+	Concurrency int
+	interval    int //间隔单位%
 }
 
-func (b *benchResult) ToString(step int) string {
+func (b *benchResult) Interval(interval int) *benchResult {
+	b.interval = interval
+	return b
+}
+
+func (b *benchResult) String() string {
+	step := b.interval
+	if step == 0 {
+		step = 5
+	}
+
 	builder := strings.Builder{}
 
 	n := len(b.CountTimes) - 1
 
-	countTimes := b.CountTimesSort()
+	countTimes := b.countTimesSort()
 
 	for i := step; i <= 100; i += step {
 		idx := (n * i) / 100
@@ -43,14 +54,14 @@ func (b *benchResult) ToString(step int) string {
 		builder.WriteString(fmt.Sprintf("%3v%v 小等于 %v\n", 100, "%", countTimes[len(countTimes)-1]))
 	}
 
-	builder.WriteString(fmt.Sprintf("total_time: %v\n", b.Total))
-	builder.WriteString(fmt.Sprintf("total_task: %v\n", b.owner.total))
-	builder.WriteString(fmt.Sprintf("concurrency: %v\n", b.owner.concurrency))
+	builder.WriteString(fmt.Sprintf("total_time: %v\n", b.TotalTime))
+	builder.WriteString(fmt.Sprintf("total_task: %v\n", b.TotalTask))
+	builder.WriteString(fmt.Sprintf("concurrency: %v\n", b.Concurrency))
 
 	return builder.String()
 }
 
-func (b *benchResult) CountTimesSort() []time.Duration {
+func (b *benchResult) countTimesSort() []time.Duration {
 	cpy := append(b.CountTimes[:0:0], b.CountTimes...)
 
 	sort.Slice(cpy, func(i, j int) bool {
@@ -84,18 +95,13 @@ func (b *bench) After(f func()) *bench {
 	return b
 }
 
-func (b *bench) CountTime() *bench {
-	b.countTime = true
-	return b
-}
-
 func (b *bench) KeepTime(f func()) time.Duration {
 	start := time.Now()
 	f()
 	return time.Now().Sub(start)
 }
 
-func (b *bench) Do(task func()) benchResult {
+func (b *bench) Do(task func()) *benchResult {
 
 	start := time.Now()
 
@@ -114,14 +120,12 @@ func (b *bench) Do(task func()) benchResult {
 
 	var countTimeArr []time.Duration
 
-	if b.countTime {
-		countTimeTask := OneTask
-		task = func() {
-			elapsed := b.KeepTime(countTimeTask)
-			mu.Lock()
-			countTimeArr = append(countTimeArr, elapsed)
-			mu.Unlock()
-		}
+	countTimeTask := OneTask
+	task = func() {
+		elapsed := b.KeepTime(countTimeTask)
+		mu.Lock()
+		countTimeArr = append(countTimeArr, elapsed)
+		mu.Unlock()
 	}
 
 	wg := sync.WaitGroup{}
@@ -141,10 +145,11 @@ func (b *bench) Do(task func()) benchResult {
 
 	wg.Wait()
 
-	return benchResult{
-		owner:      b,
-		CountTimes: countTimeArr,
-		Total:      time.Now().Sub(start),
+	return &benchResult{
+		CountTimes:  countTimeArr,
+		TotalTime:   time.Now().Sub(start),
+		TotalTask:   b.total,
+		Concurrency: b.concurrency,
 	}
 }
 
