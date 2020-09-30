@@ -1,4 +1,4 @@
-package util
+package orm
 
 import "github.com/go-xorm/xorm"
 
