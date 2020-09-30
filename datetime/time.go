@@ -14,17 +14,53 @@ func BeginOfToday() time.Time {
 	return BeginOfCurrDay(time.Now())
 }
 
+func BeginOfCurrDay(t time.Time) time.Time {
+	year, month, day := t.Date()
+	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
+}
+
 func BeginOfNextDay(t time.Time) time.Time {
-	y, m, d := t.Date()
-	return time.Date(y, m, d+1, 0, 0, 0, 0, t.Location())
+	year, month, day := t.Date()
+	return time.Date(year, month, day+1, 0, 0, 0, 0, t.Location())
 }
 
 func BeginOfPrevDay(t time.Time) time.Time {
-	y, m, d := t.Date()
-	return time.Date(y, m, d-1, 0, 0, 0, 0, t.Location())
+	year, month, day := t.Date()
+	return time.Date(year, month, day-1, 0, 0, 0, 0, t.Location())
 }
 
-func BeginOfCurrDay(t time.Time) time.Time {
-	y, m, d := t.Date()
-	return time.Date(y, m, d, 0, 0, 0, 0, t.Location())
+func BeginOfCurrHour(t time.Time) time.Time {
+	year, month, day := t.Date()
+	hour := t.Hour()
+	return time.Date(year, month, day, hour, 0, 0, 0, t.Location())
+}
+
+func BeginOfNextHour(t time.Time) time.Time {
+	year, month, day := t.Date()
+	hour := t.Hour()
+	return time.Date(year, month, day, hour+1, 0, 0, 0, t.Location())
+}
+
+func BeginOfPrevHour(t time.Time) time.Time {
+	year, month, day := t.Date()
+	hour := t.Hour()
+	return time.Date(year, month, day-1, hour-1, 0, 0, 0, t.Location())
+}
+
+func BeginOfCurrMinute(t time.Time) time.Time {
+	year, month, day := t.Date()
+	hour, min := t.Hour(), t.Minute()
+	return time.Date(year, month, day, hour, min, 0, 0, t.Location())
+}
+
+func BeginOfNextMinute(t time.Time) time.Time {
+	year, month, day := t.Date()
+	hour, min := t.Hour(), t.Minute()
+	return time.Date(year, month, day, hour, min+1, 0, 0, t.Location())
+}
+
+func BeginOfPrevMinute(t time.Time) time.Time {
+	year, month, day := t.Date()
+	hour, min := t.Hour(), t.Minute()
+	return time.Date(year, month, day-1, hour, min-1, 0, 0, t.Location())
 }
