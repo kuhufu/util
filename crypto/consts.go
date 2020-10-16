@@ -1,7 +1,7 @@
 package crypto
 
 var publicKey = `
------BEGIN RSA Public Key-----
+-----BEGIN RSA Public KeyFile-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv5j52JX2+kdiqszgnDDf
 +QLFRmo80Hgm5s24ZRhyAWvRNfYkjfG38XqudRiKzS34NzENZA4Ftyl24+Dov4hn
 ClQaqPDT6wuVmUwaTQfL4G0HGTN/dn05YbaM0jhYPc9qr/iMT5I0Fwh/B27C936y
@@ -9,11 +9,11 @@ ClQaqPDT6wuVmUwaTQfL4G0HGTN/dn05YbaM0jhYPc9qr/iMT5I0Fwh/B27C936y
 xIGPK4ALoLmrqBVtyCAQ9Z4od4HRNrGm7285BTpkfUYJ1aOJymXXGdi1/GsG7GnK
 62/+phFEQsX87vrc4BkK6KUEV5KpUxkaD2mTfNC3ye4tCEes6LwqxJvd+eQDujAg
 iwIDAQAB
------END RSA Public Key-----
+-----END RSA Public KeyFile-----
 `
 
 var privateKey = `
------BEGIN RSA Private Key-----
+-----BEGIN RSA Private KeyFile-----
 MIIEowIBAAKCAQEAv5j52JX2+kdiqszgnDDf+QLFRmo80Hgm5s24ZRhyAWvRNfYk
 jfG38XqudRiKzS34NzENZA4Ftyl24+Dov4hnClQaqPDT6wuVmUwaTQfL4G0HGTN/
 dn05YbaM0jhYPc9qr/iMT5I0Fwh/B27C936y1GbCcPpUf7uozCrw2eASn6zIuCvw
@@ -39,5 +39,5 @@ TDNCzGNcNdA2AZhXcS/2Ru5+UqkUXkArkr+qjy0gQftrqrpASxRx28xdkQIR0dsI
 AwNRAoGBAM7HFsTRSjis2+t099r89r9Vplmr/iY9PVw12TejtSlGbTeGLCrW2HWj
 wigEbnhfUYxWuyNW9HzxdNCe5AX2edEarhKF3TyU7Zo1ivDnSyy+jsLR+4hwDsZv
 i+JK5ZZu2zs1xvU2v/tATj7Q10Kkao0AGgaq3KYDHhQKZ/CZWDCq
------END RSA Private Key-----
+-----END RSA Private KeyFile-----
 `

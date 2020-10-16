@@ -29,7 +29,7 @@ func GenerateRSAKey(bits int) {
 	}
 	defer privateFile.Close()
 	//构建一个pem.Block结构体对象
-	privateBlock := pem.Block{Type: "RSA Private Key", Bytes: X509PrivateKey}
+	privateBlock := pem.Block{Type: "RSA Private KeyFile", Bytes: X509PrivateKey}
 	//将数据保存到文件
 	pem.Encode(privateFile, &privateBlock)
 
@@ -49,7 +49,7 @@ func GenerateRSAKey(bits int) {
 	}
 	defer publicFile.Close()
 	//创建一个pem.Block结构体对象
-	publicBlock := pem.Block{Type: "RSA Public Key", Bytes: X509PublicKey}
+	publicBlock := pem.Block{Type: "RSA Public KeyFile", Bytes: X509PublicKey}
 	//保存到文件
 	pem.Encode(publicFile, &publicBlock)
 }
