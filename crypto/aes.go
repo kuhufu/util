@@ -6,33 +6,36 @@ import (
 	"crypto/cipher"
 )
 
-func PKCS5Padding(cipherText []byte, blockSize int) []byte {
+//填充，用在加密
+func PKCS7Padding(cipherText []byte, blockSize int) []byte {
 	padding := blockSize - len(cipherText)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(cipherText, padText...)
 }
 
-func PKCS5UnPadding(origData []byte) []byte {
-	length := len(origData)
-	unPadding := int(origData[length-1])
-	return origData[:(length - unPadding)]
+//去填充，用在解密
+func PKCS7UnPadding(plainText []byte) []byte {
+	length := len(plainText)
+	unPadding := int(plainText[length-1])
+	return plainText[:(length - unPadding)]
 }
 
-func AesEncrypt(origData, key []byte) ([]byte, error) {
+//key 长度必须为 16, 24 或 32 字节, 对应 AES-128, AES-192, AES-256
+func AesEncrypt(plainText, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
 
 	blockSize := block.BlockSize()
-	origData = PKCS5Padding(origData, blockSize)
+	plainText = PKCS7Padding(plainText, blockSize)
 	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
-	crypto := make([]byte, len(origData))
-	blockMode.CryptBlocks(crypto, origData)
-	return crypto, nil
+	cipherText := make([]byte, len(plainText))
+	blockMode.CryptBlocks(cipherText, plainText)
+	return cipherText, nil
 }
 
-func AesDecrypt(crypted, key []byte) ([]byte, error) {
+func AesDecrypt(cipherText, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -40,8 +43,8 @@ func AesDecrypt(crypted, key []byte) ([]byte, error) {
 
 	blockSize := block.BlockSize()
 	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
-	origData := make([]byte, len(crypted))
-	blockMode.CryptBlocks(origData, crypted)
-	origData = PKCS5UnPadding(origData)
-	return origData, nil
+	plainText := make([]byte, len(cipherText))
+	blockMode.CryptBlocks(plainText, cipherText)
+	plainText = PKCS7UnPadding(plainText)
+	return plainText, nil
 }
