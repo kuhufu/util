@@ -51,7 +51,7 @@ func BeginOfNextHour(t time.Time) time.Time {
 func BeginOfPrevHour(t time.Time) time.Time {
 	year, month, day := t.Date()
 	hour := t.Hour()
-	return time.Date(year, month, day-1, hour-1, 0, 0, 0, t.Location())
+	return time.Date(year, month, day, hour-1, 0, 0, 0, t.Location())
 }
 
 func BeginOfCurrMinute(t time.Time) time.Time {
@@ -69,7 +69,7 @@ func BeginOfNextMinute(t time.Time) time.Time {
 func BeginOfPrevMinute(t time.Time) time.Time {
 	year, month, day := t.Date()
 	hour, min := t.Hour(), t.Minute()
-	return time.Date(year, month, day-1, hour, min-1, 0, 0, t.Location())
+	return time.Date(year, month, day, hour, min-1, 0, 0, t.Location())
 }
 
 /**
