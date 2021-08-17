@@ -28,3 +28,11 @@ func BenchmarkBeginOfCurrDay(b *testing.B) {
 		BeginOfCurrDay(now)
 	}
 }
+
+func TestGetMondayOfCurrentWeek(t *testing.T) {
+	fmt.Println(GetMondayOfCurrentWeek())
+}
+
+func TestGetWeekdayOf(t *testing.T) {
+	fmt.Println(GetWeekdayOf(time.Now(), time.Sunday))
+}
