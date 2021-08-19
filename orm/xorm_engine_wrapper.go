@@ -1,6 +1,6 @@
 package orm
 
-import "github.com/go-xorm/xorm"
+import "xorm.io/xorm"
 
 type XormEngineWrapper struct {
 	*xorm.Engine
