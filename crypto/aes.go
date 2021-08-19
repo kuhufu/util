@@ -29,20 +29,20 @@ func AesEncrypt(plainText, key []byte) ([]byte, error) {
 
 	blockSize := block.BlockSize()
 	plainText = PKCS7Padding(plainText, blockSize)
-	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
+	blockMode := cipher.NewCBCEncrypter(block, key)
 	cipherText := make([]byte, len(plainText))
 	blockMode.CryptBlocks(cipherText, plainText)
 	return cipherText, nil
 }
 
+//key 长度必须为 16, 24 或 32 字节, 对应 AES-128, AES-192, AES-256
 func AesDecrypt(cipherText, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
 
-	blockSize := block.BlockSize()
-	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
+	blockMode := cipher.NewCBCDecrypter(block, key)
 	plainText := make([]byte, len(cipherText))
 	blockMode.CryptBlocks(plainText, cipherText)
 	plainText = PKCS7UnPadding(plainText)

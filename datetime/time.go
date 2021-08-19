@@ -79,9 +79,13 @@ func GetMondayOfCurrentWeek() (weekStartDate time.Time) {
 	return GetWeekdayOf(time.Now(), time.Monday)
 }
 
-// 这里周日是一周的开始
 func GetWeekdayOf(t time.Time, weekday time.Weekday) (weekStartDate time.Time) {
 	offset := weekday - t.Weekday()
+
+	//这里周日是一周的开始。改成中国的习惯，周一是一周的开始
+	if weekday == time.Sunday {
+		offset = (offset + 7) % 7
+	}
 
 	weekStartDate = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.Local).AddDate(0, 0, int(offset))
 

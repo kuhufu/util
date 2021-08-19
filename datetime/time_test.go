@@ -34,5 +34,6 @@ func TestGetMondayOfCurrentWeek(t *testing.T) {
 }
 
 func TestGetWeekdayOf(t *testing.T) {
-	fmt.Println(GetWeekdayOf(time.Now(), time.Sunday))
+	sunday := time.Now().Add(time.Hour * 24 * 3)
+	fmt.Println(GetWeekdayOf(sunday, time.Sunday))
 }
