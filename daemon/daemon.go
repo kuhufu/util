@@ -2,7 +2,6 @@ package daemon
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -138,18 +137,19 @@ func handleSignal() {
 
 		select {
 		case sig := <-notifyChan:
-			log.Println()
 			Log("receive signal:", sig)
 
 			switch sig {
 			case syscall.SIGHUP:
 				//检查可执行文件是否存在
-				if !FileExist(os.Args[0]) {
-					Log(os.Args[0], "not exist restart failed")
+
+				file, err := exec.LookPath(os.Args[0])
+				if err != nil {
+					Log(file, "restart failed", err)
 					continue
 				}
 
-				err := getCmd().Process.Kill()
+				err = getCmd().Process.Kill()
 				if err != nil {
 					Log("kill child fail", err)
 				}
