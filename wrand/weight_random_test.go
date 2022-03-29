@@ -2,21 +2,32 @@ package wrand
 
 import (
 	"fmt"
+	"github.com/shopspring/decimal"
+	"math"
 	"testing"
 )
 
 func TestWeightRandom_Rand(t *testing.T) {
 	w := New([]Item{
-		{20, "1"},
-		{50, "2"},
-		{30, "3"},
+		{Weight: 0.21, Val: "1"},
+		{Weight: 1, Val: "2"},
+		{Weight: "-0.30", Val: "3"},
 	})
 
 	res := map[interface{}]int{}
 
-	for i := 0; i < 100000; i++ {
+	for i := 0; i < 150000; i++ {
 		res[w.Rand()] += 1
 	}
 
 	fmt.Println(res)
+}
+
+func Test(t *testing.T) {
+	d := decimal.RequireFromString("01111.11")
+	t.Log(d.Exponent())
+	t.Log(d.CoefficientInt64())
+	t.Log(d.NumDigits())
+	t.Log(math.Pow(10, 2))
+
 }
