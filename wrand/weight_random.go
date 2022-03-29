@@ -7,16 +7,16 @@ import (
 )
 
 type Item struct {
-	Weight    interface{}
-	Val       interface{}
-	weightInt int64
+	Weight interface{}
+	Val    interface{}
 }
 
 type WeightRandom struct {
 	rand        *rand.Rand
 	items       []Item
+	weights     []int64
 	totalWeight int64
-	precious    int
+	precious    int32
 }
 
 func scan(v interface{}) decimal.Decimal {
@@ -64,10 +64,12 @@ func New(items []Item) *WeightRandom {
 		precious = 0
 	}
 
+	weights := make([]int64, len(items))
+
 	var totalWeight int64
 	for i := 0; i < len(items); i++ {
 		weightInt := decimals[i].Mul(decimal.NewFromInt(pow(10, int64(precious)))).IntPart()
-		items[i].weightInt = weightInt
+		weights[i] = weightInt
 		totalWeight += weightInt
 	}
 
@@ -75,6 +77,8 @@ func New(items []Item) *WeightRandom {
 		rand:        rand.New(rand.NewSource(time.Now().UnixNano())),
 		items:       items,
 		totalWeight: totalWeight,
+		weights:     weights,
+		precious:    precious,
 	}
 	return w
 }
@@ -83,10 +87,10 @@ func (w *WeightRandom) Rand() interface{} {
 	n := w.rand.Int63n(w.totalWeight)
 
 	var start int64
-	for _, item := range w.items {
-		start += item.weightInt
+	for i, weight := range w.weights {
+		start += weight
 		if n < start {
-			return item.Val
+			return w.items[i].Val
 		}
 	}
 

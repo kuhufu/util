@@ -9,14 +9,14 @@ import (
 
 func TestWeightRandom_Rand(t *testing.T) {
 	w := New([]Item{
-		{Weight: 0.21, Val: "1"},
-		{Weight: 1, Val: "2"},
-		{Weight: "-0.30", Val: "3"},
+		{Weight: 0.2, Val: "1"},
+		{Weight: 0.55, Val: "2"},
+		{Weight: "0.25", Val: "3"},
 	})
 
 	res := map[interface{}]int{}
 
-	for i := 0; i < 150000; i++ {
+	for i := 0; i < 100000; i++ {
 		res[w.Rand()] += 1
 	}
 
