@@ -1,4 +1,4 @@
-package crypto
+package rsa
 
 import (
 	"crypto/rand"
@@ -27,7 +27,6 @@ func GenerateRSAKey(bits int) {
 	if err != nil {
 		panic(err)
 	}
-	defer privateFile.Close()
 	//构建一个pem.Block结构体对象
 	privateBlock := pem.Block{Type: "RSA Private KeyFile", Bytes: X509PrivateKey}
 	//将数据保存到文件
@@ -47,7 +46,6 @@ func GenerateRSAKey(bits int) {
 	if err != nil {
 		panic(err)
 	}
-	defer publicFile.Close()
 	//创建一个pem.Block结构体对象
 	publicBlock := pem.Block{Type: "RSA Public KeyFile", Bytes: X509PublicKey}
 	//保存到文件

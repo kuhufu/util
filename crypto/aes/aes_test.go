@@ -1,4 +1,4 @@
-package crypto
+package aes
 
 import (
 	"encoding/base64"
@@ -9,7 +9,7 @@ import (
 func TestAesDecrypt(t *testing.T) {
 	var aeskey = []byte("321423u9y8d2fwfl")
 	plainText := []byte("vdncloud123456")
-	cipherText, err := AesEncrypt(plainText, aeskey)
+	cipherText, err := Encrypt(plainText, aeskey)
 	if err != nil {
 		t.Error(err)
 		return
@@ -24,7 +24,7 @@ func TestAesDecrypt(t *testing.T) {
 		return
 	}
 
-	tpass, err := AesDecrypt(bytesPass, aeskey)
+	tpass, err := Decrypt(bytesPass, aeskey)
 	if err != nil {
 		t.Log(err)
 		return

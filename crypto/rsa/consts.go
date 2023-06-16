@@ -1,4 +1,4 @@
-package crypto
+package rsa
 
 var publicKey = `
 -----BEGIN RSA Public KeyFile-----
