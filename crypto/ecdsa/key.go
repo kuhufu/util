@@ -5,21 +5,47 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
+	"os"
 )
 
-func LoadPublicKey(filename string) (*ecdsa.PublicKey, error) {
-	data, err := ioutil.ReadFile(filename)
+func LoadPublicKeyFromPemFile(filename string) (*ecdsa.PublicKey, error) {
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	block, _ := pem.Decode(data)
+	return LoadPublicKeyFromPemBytes(data)
+}
+
+func LoadPrivateKeyFromPemFile(filename string) (*ecdsa.PrivateKey, error) {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	return LoadPrivateKeyFromPemBytes(data)
+}
+
+func LoadPublicKeyFromPemBytes(pemBytes []byte) (*ecdsa.PublicKey, error) {
+	block, _ := pem.Decode(pemBytes)
 	if block == nil {
 		return nil, fmt.Errorf("failed to parse PEM block containing the public key")
 	}
 
-	pub, err := x509.ParsePKIXPublicKey(block.Bytes)
+	return LoadPublicKeyFromBytes(block.Bytes)
+}
+
+func LoadPrivateKeyFromPemBytes(pemBytes []byte) (*ecdsa.PrivateKey, error) {
+	block, _ := pem.Decode(pemBytes)
+	if block == nil {
+		return nil, fmt.Errorf("failed to parse PEM block containing the public key")
+	}
+
+	return loadPrivateKeyFromBytes(block.Bytes)
+}
+
+func LoadPublicKeyFromBytes(data []byte) (*ecdsa.PublicKey, error) {
+	pub, err := x509.ParsePKIXPublicKey(data)
 	if err != nil {
 		return nil, err
 	}
@@ -32,18 +58,8 @@ func LoadPublicKey(filename string) (*ecdsa.PublicKey, error) {
 	}
 }
 
-func loadPrivateKey(filename string) (*ecdsa.PrivateKey, error) {
-	data, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-
-	block, _ := pem.Decode(data)
-	if block == nil {
-		return nil, fmt.Errorf("failed to parse PEM block containing the private key")
-	}
-
-	priv, err := x509.ParseECPrivateKey(block.Bytes)
+func loadPrivateKeyFromBytes(data []byte) (*ecdsa.PrivateKey, error) {
+	priv, err := x509.ParseECPrivateKey(data)
 	if err != nil {
 		return nil, err
 	}

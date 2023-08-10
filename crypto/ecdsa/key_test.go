@@ -7,11 +7,11 @@ import (
 func Test_loadKey(t *testing.T) {
 	text := "hahahah"
 
-	privateKey, err := loadPrivateKey("private.pem")
+	privateKey, err := LoadPrivateKeyFromPemFile("private.pem")
 	if err != nil {
 		t.Error(err)
 	}
-	publicKey, err := LoadPublicKey("public.pem")
+	publicKey, err := LoadPublicKeyFromPemFile("public.pem")
 	if err != nil {
 		t.Error(err)
 	}
