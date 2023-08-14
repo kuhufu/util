@@ -9,7 +9,7 @@ func TestGenerateKey(t *testing.T) {
 }
 
 func TestRSA_Decrypt(t *testing.T) {
-	r := NewRSA(publicKey, privateKey)
+	r := NewRSA(privateKey)
 
 	tests := []struct {
 		plainText string

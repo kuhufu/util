@@ -40,33 +40,22 @@ func GenerateKey() {
 }
 
 type RSA struct {
-	publicPem  string
 	privatePem string
-
 	privateKey *rsa.PrivateKey
 	publicKey  *rsa.PublicKey
 }
 
-func NewRSA(publicPem, privatePem string) *RSA {
-	block, _ := pem.Decode([]byte(publicKey))
-	publicKeyI, err := x509.ParsePKIXPublicKey(block.Bytes)
-	if err != nil {
-		panic(err)
-	}
-
-	publicKey := publicKeyI.(*rsa.PublicKey)
-
-	block, _ = pem.Decode([]byte(privateKey))
+func NewRSA(privatePem string) *RSA {
+	block, _ := pem.Decode([]byte(privatePem))
 	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
 		panic(err)
 	}
 
 	return &RSA{
-		publicPem:  publicPem,
 		privatePem: privatePem,
 		privateKey: privateKey,
-		publicKey:  publicKey,
+		publicKey:  &privateKey.PublicKey,
 	}
 }
 
