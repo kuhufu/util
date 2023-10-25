@@ -1,6 +1,6 @@
 module github.com/kuhufu/util
 
-go 1.14
+go 1.18
 
 require (
 	github.com/kr/pretty v0.2.1 // indirect
