@@ -14,18 +14,22 @@ func Test(t *testing.T) {
 		{4, "d", 200},
 	}
 
-	root := &Group[*User]{Values: arr}
+	root := New(arr)
 
 	root.GroupBy(func(user *User) string {
 		return strconv.Itoa(int(user.Id % 2))
 	})
 
 	root.Sort(func(ig, jg *Group[*User]) bool {
-		return ig.Key < ig.Key
+		return ig.Key < jg.Key
 	})
 
 	root.GroupBy(func(user *User) string {
 		return user.Name
+	})
+
+	root.Sort(func(ig, jg *Group[*User]) bool {
+		return ig.Key < jg.Key
 	})
 
 	pprint.Println(root)
