@@ -1,12 +1,8 @@
 package group
 
-import "sort"
-
-type User struct {
-	Id   int64
-	Name string
-	Age  int64
-}
+import (
+	"golang.org/x/exp/slices"
+)
 
 type Group[T any] struct {
 	Key    string
@@ -29,27 +25,24 @@ func (g *Group[T]) GroupBy(fn func(T) string) {
 	var nextLevelGroups []*Group[T]
 
 	for _, group := range g.curLevelNodes {
-		nextLevelGroups = append(nextLevelGroups, GroupBy(group, fn)...)
+		nextLevelGroups = append(nextLevelGroups, by(group, fn)...)
 	}
 	g.prevLevelNodes = g.curLevelNodes
 	g.curLevelNodes = nextLevelGroups
 }
 
-func (g *Group[T]) Sort(fn func(ig, jg *Group[T]) bool) {
+func (g *Group[T]) Sort(fn func(ig, jg *Group[T]) int) {
 	if g.prevLevelNodes == nil {
 		return
 	}
 
 	for _, group := range g.prevLevelNodes {
 		ng := group.NextNodes
-		sort.Slice(ng, func(i, j int) bool {
-			v := fn(ng[i], ng[j])
-			return v
-		})
+		slices.SortFunc(ng, fn)
 	}
 }
 
-func GroupBy[T any](g *Group[T], fn func(u T) string) []*Group[T] {
+func by[T any](g *Group[T], fn func(u T) string) []*Group[T] {
 	var m = map[string][]T{}
 	for i := 0; i < len(g.Values); i++ {
 		k := fn(g.Values[i])

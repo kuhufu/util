@@ -1,20 +1,16 @@
 package stream
 
 import (
+	"cmp"
 	"slices"
 )
-
-type Entry[K comparable, V any] struct {
-	K K
-	V V
-}
 
 func MapToSlice[K comparable, V any](m map[K]V) []Entry[K, V] {
 	arr := make([]Entry[K, V], len(m))
 	for k, v := range m {
 		arr = append(arr, Entry[K, V]{
-			K: k,
-			V: v,
+			Key: k,
+			Val: v,
 		})
 	}
 	return arr
@@ -38,4 +34,111 @@ func Sort[K comparable, T any](arr []T, fn func(a, b T) bool) {
 		}
 		return 1
 	})
+}
+
+func Map[T any, V any](list []T, fn func(v T) V) []V {
+	ret := make([]V, 0, len(list))
+	for _, v := range list {
+		ret = append(ret, fn(v))
+	}
+
+	return ret
+}
+
+func Flat[T any](list [][]T) []T {
+	var size int
+	for _, v := range list {
+		size += len(v)
+	}
+
+	ret := make([]T, 0, size)
+	for _, v := range list {
+		ret = append(ret, v...)
+	}
+
+	return ret
+}
+
+func Dedup[T comparable](list []T) []T {
+	ret := make([]T, 0, len(list))
+
+	for _, v := range list {
+		if Contains(ret, v) {
+			continue
+		}
+		ret = append(ret, v)
+	}
+	return ret
+}
+
+func FlatMap[T any, V any](list [][]T, fn func(e T) V) []V {
+	var size int
+	for _, v := range list {
+		size += len(v)
+	}
+
+	ret := make([]V, 0, size)
+	for _, v := range list {
+		for _, t := range v {
+			ret = append(ret, fn(t))
+		}
+	}
+
+	return ret
+}
+
+func Filter[T any](list []T, fn func(e T) bool) []T {
+	var ret []T
+	for _, v := range list {
+		if fn(v) {
+			ret = append(ret, v)
+		}
+	}
+
+	return ret
+}
+
+func FilterOne[T any](list []T, fn func(e T) bool) T {
+	var t T
+	for _, v := range list {
+		if fn(v) {
+			return v
+		}
+	}
+	return t
+}
+
+func Each[T any](list []T, fn func(v T)) {
+	for _, t := range list {
+		fn(t)
+	}
+}
+
+func Sum[T cmp.Ordered](list []T) T {
+	var ret T
+	for _, v := range list {
+		ret += v
+	}
+
+	return ret
+}
+
+func Contains[T comparable](list []T, in T) bool {
+	for _, v := range list {
+		if v == in {
+			return true
+		}
+	}
+
+	return false
+}
+
+func ToMap[K comparable, T, V any](arr []T, fn func(T) (K, V)) map[K]V {
+	m := make(map[K]V, len(arr))
+
+	for _, v := range arr {
+		k, v := fn(v)
+		m[k] = v
+	}
+	return m
 }
