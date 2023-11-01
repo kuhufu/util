@@ -5,17 +5,6 @@ import (
 	"slices"
 )
 
-func MapToSlice[K comparable, V any](m map[K]V) []Entry[K, V] {
-	arr := make([]Entry[K, V], len(m))
-	for k, v := range m {
-		arr = append(arr, Entry[K, V]{
-			Key: k,
-			Val: v,
-		})
-	}
-	return arr
-}
-
 func GroupBy[K comparable, V any](arr []V, fn func(v V) K) map[K][]V {
 	var m = map[K][]V{}
 	for _, e := range arr {
@@ -24,16 +13,6 @@ func GroupBy[K comparable, V any](arr []V, fn func(v V) K) map[K][]V {
 	}
 
 	return m
-}
-
-func Sort[K comparable, T any](arr []T, fn func(a, b T) bool) {
-	slices.SortFunc(arr, func(a, b T) int {
-		less := fn(a, b)
-		if less {
-			return -1
-		}
-		return 1
-	})
 }
 
 func Map[T any, V any](list []T, fn func(v T) V) []V {
@@ -141,4 +120,29 @@ func ToMap[K comparable, T, V any](arr []T, fn func(T) (K, V)) map[K]V {
 		m[k] = v
 	}
 	return m
+}
+
+func Merge[T any](arrs ...[]T) []T {
+	var size int
+	for _, arr := range arrs {
+		size += len(arr)
+	}
+
+	ret := make([]T, 0, size)
+
+	for _, arr := range arrs {
+		ret = append(ret, arr...)
+	}
+
+	return ret
+}
+
+func SortByLess[K comparable, T any](arr []T, fn func(a, b T) bool) {
+	slices.SortFunc(arr, func(a, b T) int {
+		less := fn(a, b)
+		if less {
+			return -1
+		}
+		return 1
+	})
 }

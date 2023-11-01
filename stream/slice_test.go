@@ -2,6 +2,7 @@ package stream
 
 import (
 	"github.com/kuhufu/util/pprint"
+	"slices"
 	"testing"
 )
 
@@ -20,4 +21,18 @@ func TestFlat(t *testing.T) {
 func TestDedup(t *testing.T) {
 	list := Dedup([]int64{1, 2, 3, 1, 1, 2})
 	pprint.Println(list)
+}
+
+func TestMerge(t *testing.T) {
+	a1 := []int{1, 2}
+	a2 := []int{3, 4}
+	a3 := []int{4, 5}
+
+	merge := Merge(a1, a2, a3)
+	t.Log(merge)
+}
+
+func TestCompact(t *testing.T) {
+	compact := slices.Compact([]int{1, 3, 2, 3, 3})
+	t.Log(compact)
 }

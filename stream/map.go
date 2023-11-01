@@ -66,7 +66,7 @@ func PickBy[K comparable, V any](in map[K]V, fn func(K, V) bool) map[K]V {
 	return ret
 }
 
-func MapReverse[K comparable, V any, T comparable](m map[K]V, fn func(V) T) map[T]K {
+func ReverseMap[K comparable, V any, T comparable](m map[K]V, fn func(V) T) map[T]K {
 	ms := map[T]K{}
 	for k, v := range m {
 		ms[fn(v)] = k
