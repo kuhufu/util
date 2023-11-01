@@ -3,8 +3,19 @@ package stream
 import (
 	"github.com/kuhufu/util/pprint"
 	"slices"
+	"strconv"
 	"testing"
 )
+
+func TestMap(t *testing.T) {
+	strArr := []string{"1", "2"}
+	Map(strArr, func(v string) int {
+		i, _ := strconv.Atoi(v)
+		return i
+	})
+
+	t.Log(strArr)
+}
 
 func TestFlat(t *testing.T) {
 	l1 := Map([]string{"1", "2"}, func(v string) []int64 {
