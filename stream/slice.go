@@ -112,11 +112,11 @@ func Contains[T comparable](list []T, in T) bool {
 	return false
 }
 
-func ToMap[K comparable, T, V any](arr []T, fn func(T) (K, V)) map[K]V {
+func ToMap[K comparable, T, V any](arr []T, fn func(idx int, v T) (K, V)) map[K]V {
 	m := make(map[K]V, len(arr))
 
-	for _, v := range arr {
-		k, v := fn(v)
+	for i, v := range arr {
+		k, v := fn(i, v)
 		m[k] = v
 	}
 	return m
