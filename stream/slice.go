@@ -146,3 +146,23 @@ func SortByLess[K comparable, T any](arr []T, fn func(a, b T) bool) {
 		return 1
 	})
 }
+
+func All[T any](arr []T, f func(t T) bool) bool {
+	for _, t := range arr {
+		if !f(t) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func Some[T any](arr []T, f func(t T) bool) bool {
+	for _, t := range arr {
+		if f(t) {
+			return true
+		}
+	}
+
+	return false
+}

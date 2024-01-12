@@ -47,3 +47,19 @@ func TestCompact(t *testing.T) {
 	compact := slices.Compact([]int{1, 3, 2, 3, 3})
 	t.Log(compact)
 }
+
+func TestAll(t *testing.T) {
+	all := All([]int{1, 2, 3, 4, 5}, func(v int) bool {
+		return v > 0
+	})
+
+	t.Log(all)
+}
+
+func TestSome(t *testing.T) {
+	some := Some([]int{1, 2, 3, 4, 5}, func(v int) bool {
+		return v > 4
+	})
+
+	t.Log(some)
+}
