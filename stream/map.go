@@ -5,7 +5,6 @@ func MapValue[K comparable, V, T any](m map[K]V, fn func(V) T) map[K]T {
 	for k, v := range m {
 		ms[k] = fn(v)
 	}
-
 	return ms
 }
 
@@ -16,6 +15,48 @@ func MapKey[K, K2 comparable, V any](m map[K]V, fn func(K) K2) map[K2]V {
 	}
 
 	return ms
+}
+
+func MapKV[K, K2 comparable, V, V2 any](m map[K]V, fn func(K, V) (K2, V2)) map[K2]V2 {
+	ms := map[K2]V2{}
+	for k, v := range m {
+		k2, v2 := fn(k, v)
+		ms[k2] = v2
+	}
+
+	return ms
+}
+
+func FilterByKey[K comparable, V any](m map[K]V, fn func(K) bool) map[K]V {
+	ms := map[K]V{}
+	for k, v := range m {
+		if fn(k) {
+			ms[k] = v
+		}
+	}
+
+	return ms
+}
+
+func FilterByValue[K comparable, V any](m map[K]V, fn func(V) bool) map[K]V {
+	ms := map[K]V{}
+	for k, v := range m {
+		if fn(v) {
+			ms[k] = v
+		}
+	}
+
+	return ms
+}
+
+func ContainsKey[K comparable, V any](m map[K]V, fn func(K) bool) bool {
+	for k, _ := range m {
+		if fn(k) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func GroupByKey[K, K2 comparable, V any](m map[K]V, fn func(K) K2) map[K2][]V {
@@ -89,19 +130,44 @@ func Join1NAnd1N[K comparable, V comparable, T any](m1 map[K][]V, m2 map[V][]T) 
 	return ms
 }
 
+func ToSlice[K comparable, V any, T any](m map[K]V, f func(K, V) T) []T {
+	list := make([]T, 0, len(m))
+	for k, v := range m {
+		list = append(list, f(k, v))
+	}
+
+	return list
+}
+
 type Entry[K any, V any] struct {
 	Key K `json:"key"`
 	Val V `json:"val"`
 }
 
 func ToEntries[K comparable, V any](m map[K]V) []Entry[K, V] {
-	list := make([]Entry[K, V], 0, len(m))
-	for k, v := range m {
-		list = append(list, Entry[K, V]{
+	return ToSlice(m, func(k K, v V) Entry[K, V] {
+		return Entry[K, V]{
 			Key: k,
 			Val: v,
-		})
+		}
+	})
+}
+
+func FromEntries[K comparable, V any](entries []Entry[K, V]) map[K]V {
+	return ToMap(entries, func(_ int, e Entry[K, V]) (K, V) {
+		return e.Key, e.Val
+	})
+}
+
+// MergeMap 合并map，覆盖相同key的值
+func MergeMap[K comparable, V any](ms ...map[K]V) map[K]V {
+	ret := make(map[K]V)
+
+	for _, m := range ms {
+		for k, v := range m {
+			ret[k] = v
+		}
 	}
 
-	return list
+	return ret
 }

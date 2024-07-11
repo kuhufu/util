@@ -1,7 +1,6 @@
 package stream
 
 import (
-	"github.com/kuhufu/util/pprint"
 	"slices"
 	"strconv"
 	"testing"
@@ -22,24 +21,24 @@ func TestFlat(t *testing.T) {
 		return []int64{1, 2}
 	})
 
-	pprint.Println(l1)
+	t.Log(l1)
 
 	flat := Flat(l1)
 
-	pprint.Println(flat)
+	t.Log(flat)
 }
 
-func TestDedup(t *testing.T) {
-	list := Dedup([]int64{1, 2, 3, 1, 1, 2})
-	pprint.Println(list)
+func TestUnique(t *testing.T) {
+	list := Unique([]int64{1, 2, 3, 1, 1, 2})
+	t.Log(list)
 }
 
-func TestMerge(t *testing.T) {
+func TestConcat(t *testing.T) {
 	a1 := []int{1, 2}
 	a2 := []int{3, 4}
 	a3 := []int{4, 5}
 
-	merge := Merge(a1, a2, a3)
+	merge := Concat(a1, a2, a3)
 	t.Log(merge)
 }
 
@@ -48,18 +47,21 @@ func TestCompact(t *testing.T) {
 	t.Log(compact)
 }
 
-func TestAll(t *testing.T) {
-	all := All([]int{1, 2, 3, 4, 5}, func(v int) bool {
-		return v > 0
-	})
-
-	t.Log(all)
+func TestContainsArr(t *testing.T) {
+	t.Log(ContainsArr([]int{1, 2, 3}, []int{3, 2, 4}))
 }
 
-func TestSome(t *testing.T) {
-	some := Some([]int{1, 2, 3, 4, 5}, func(v int) bool {
-		return v > 4
-	})
+func TestUnion(t *testing.T) {
+	a := []int{1, 2, 3, 4, 5}
+	b := []int{1, 2, 3, 4}
+	t.Log(Union(a, b))
+	t.Log(Diff(a, b))
+	t.Log(Diff(b, a))
+}
 
-	t.Log(some)
+func TestMove(t *testing.T) {
+	a := []int{1, 2, 3, 4, 5}
+	t.Log(a)
+	Move(a, 3, 1)
+	t.Log(a)
 }

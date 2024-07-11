@@ -1,7 +1,6 @@
 package stream
 
 import (
-	"github.com/kuhufu/util/pprint"
 	"testing"
 )
 
@@ -63,5 +62,5 @@ func TestToEntries(t *testing.T) {
 
 	entries := ToEntries(m)
 
-	pprint.Println(entries)
+	t.Log(entries)
 }
